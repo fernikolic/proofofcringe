@@ -13,26 +13,46 @@
     <meta property="og:url" content="https://proofofcringe.com/">
     <meta property="og:title" content="Proof Of Cringe 😬">
     <meta property="og:description" content="A hilarious collection of cringe-worthy Bitcoin predictions and comments.">
-    <meta property="og:image" content="https://i.ytimg.com/vi/Oy5PVKFgmss/maxresdefault.jpg"> <!-- Make sure to update the image URL -->
+    <meta property="og:image" content="https://i.ytimg.com/vi/Oy5PVKFgmss/maxresdefault.jpg">
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="https://proofofcringe.com/">
     <meta name="twitter:title" content="Proof Of Cringe 😬">
     <meta name="twitter:description" content="A hilarious collection of cringe-worthy Bitcoin predictions and comments.">
-    <meta name="twitter:image" content="https://i.ytimg.com/vi/Oy5PVKFgmss/maxresdefault.jpg"> <!-- Make sure to update the image URL -->
+    <meta name="twitter:image" content="https://i.ytimg.com/vi/Oy5PVKFgmss/maxresdefault.jpg">
 
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@100;400;700&display=swap" rel="stylesheet">
     
     <!-- Favicon -->
-    <link rel="icon" href="https://your-custom-domain.com/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="https://s3.amazonaws.com/pix.iemoji.com/images/emoji/apple/ios-12/256/grimacing-face.png" type="image/x-icon">
 
     <!-- CSS -->
     <link rel="stylesheet" href="styles.css">
 
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <!-- Firebase App (use Firebase version 8.x to avoid modular syntax issues) -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+
+    <!-- Initialize Firebase -->
+    <script>
+      var firebaseConfig = {
+        apiKey: "AIzaSyB2wmiqHRTTqU4aHodRoLJ9OBnJaNRMgL0",
+        authDomain: "proof-of-cringe-72a1a.firebaseapp.com",
+        databaseURL: "https://proof-of-cringe-72a1a-default-rtdb.firebaseio.com",
+        projectId: "proof-of-cringe-72a1a",
+        storageBucket: "proof-of-cringe-72a1a.appspot.com",
+        messagingSenderId: "576220861794",
+        appId: "1:576220861794:web:bce3a2464580a5342e083b",
+        measurementId: "G-DT8BHG4PL3"
+      };
+      // Initialize Firebase
+      firebase.initializeApp(firebaseConfig);
+    </script>
 
     <!-- Glow Button -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
@@ -42,21 +62,29 @@
 
     <!-- Text-based logo instead of circular emoji -->
     <div class="logo-container">
-        <h1 class="logo">Proof Of Cringe 😬</h1>
+        <h1 class="logo">Proof Of Cringe 🤢</h1>
     </div>
 
-    <!-- Bitcoin Perception Button -->
-    <a href="https://bitcoinperception.com" class="glow-button" target="_blank">
-        <span>By Bitcoin Perception</span>
-    </a>
+    <!-- Plain text for "By Bitcoin Perception" with logo -->
+    <div class="plain-text">
+        <p>
+            <a href="https://bitcoinperception.com" target="_blank" style="text-decoration: none; color: inherit; display: flex; align-items: center;">
+              <img src="https://bitcoinperception.com/content/images/2024/09/New-Perception-Logo--black--1.png" alt="Bitcoin Perception Logo" style="width: 24px; height: 24px; margin-right: 8px;">
+              By Bitcoin Perception
+            </a>
+        </p>
+    </div>
+
+    <!-- Voting system -->
+    <div class="vote-container">
+        <button id="thumbs-up" class="vote-button">Criiiiiinge 🤢</button>
+        <button id="thumbs-down" class="vote-button">Sorry, not cringe enough 🙅‍♂️</button>
+    </div>
 
     <!-- Main Content -->
     <div class="container">
         <img id="screenshot" src="" alt="Screenshot will appear here">
     </div>
-
-    <!-- Button placed directly below container -->
-    <button id="see-another">More Cringe</button>
 
     <!-- Description Section -->
     <div id="description-container">
