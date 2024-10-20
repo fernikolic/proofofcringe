@@ -54,7 +54,7 @@ function displayContent() {
   console.log('Data array length:', data.length);
 
   if (data.length === 0) {
-    document.getElementById('headline-link').textContent = 'No data available.';
+    console.error('No data available to display.');
     return;
   }
 
@@ -66,6 +66,11 @@ function displayContent() {
   const description = document.getElementById('description');
   const dateElement = document.getElementById('date');
   const outletElement = document.getElementById('outlet');
+
+  if (!screenshot || !description || !dateElement || !outletElement) {
+    console.error('One or more elements are missing in the DOM');
+    return;
+  }
 
   screenshot.classList.remove('show');
   description.classList.remove('show');
