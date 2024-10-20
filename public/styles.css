@@ -21,7 +21,7 @@ body {
 }
 
 .logo {
-    font-size: 30px;
+    font-size: 20px;
     font-weight: 700;
     color: black;
     position: relative;
@@ -30,13 +30,7 @@ body {
     animation: rotateBounce 2.5s infinite ease-in-out;
 }
 
-@keyframes rotateBounce {
-    0% { transform: rotate(0deg) translateY(0); }
-    25% { transform: rotate(15deg) translateY(-10px); }
-    50% { transform: rotate(30deg) translateY(0); }
-    75% { transform: rotate(15deg) translateY(-10px); }
-    100% { transform: rotate(0deg) translateY(0); }
-}
+
 
 /* Plain text for "By Bitcoin Perception" */
 .plain-text {
@@ -108,19 +102,22 @@ body {
 
 /* Vote Buttons */
 .vote-button {
-    background-color: black;
+    background: linear-gradient(135deg, #ff6b6b, #ffcc70); /* Gradient */
     color: white;
     border: none;
     padding: 10px 20px;
-    margin: 0 15px; /* Adds space between the buttons */
+    margin: 0 15px;
     cursor: pointer;
     font-size: 1em;
     border-radius: 8px;
-    transition: background-color 0.3s ease;
+    transition: background 0.3s ease, transform 0.2s ease;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
 }
 
 .vote-button:hover {
-    background-color: #666;
+    background: linear-gradient(135deg, #ffcc70, #ff6b6b); /* Reverse gradient */
+    transform: translateY(-2px); /* Slight upward movement */
+    box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.15); /* Enhanced shadow */
 }
 
 /* Additional Information (Date and Outlet) */
@@ -171,4 +168,19 @@ body {
     .logo {
         font-size: 18px;
     }
+}
+
+/* Headline and Subheadline Styling */
+.headline {
+    font-size: 1.2em;
+    margin-top: 20px;
+    color: black;
+    font-weight: 700;
+}
+
+.subheadline {
+    font-size: 0.8em;
+    margin-top: 10px;
+    color: grey;
+    font-weight: 400;
 }
