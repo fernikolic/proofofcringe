@@ -60,13 +60,14 @@
 </head>
 <body>
 
-    <!-- Text-based logo instead of circular emoji -->
+    <!-- Text-based logo -->
     <div class="logo-container">
         <h1 class="logo">Proof Of Cringe 🤢</h1>
     </div>
 
     <!-- Headline Section -->
     <h2 class="headline">Explore and rank the worst Bitcoin takes from mainstream media.</h2>
+    
     <!-- Plain text for "By Bitcoin Perception" with logo -->
     <div class="plain-text">
         <p>
@@ -99,6 +100,33 @@
         <p id="date">Date: N/A</p>
         <p id="outlet">Outlet: N/A</p>
     </div>
+
+<!-- Interstitial Modal for Email Signup -->
+<div id="interstitial" style="display: none;">
+    <div class="interstitial-content">
+      <h2>Enjoying the Cringe?</h2>
+      <p>Sign up for exclusive insights into Bitcoin media trends!</p>
+  
+      <!-- Email Signup Form -->
+      <div style="min-height: 58px; max-width: 440px; width: 100%;">
+        <script src="https://cdn.jsdelivr.net/ghost/signup-form@~0.2/umd/signup-form.min.js" 
+                data-button-color="#000000" 
+                data-button-text-color="#FFFFFF" 
+                data-site="https://bitcoinperception.com/" 
+                data-locale="en" async>
+        </script>
+      </div>
+  
+      <button id="close-interstitial" class="vote-button">Continue Voting</button>
+      <button id="never-show-interstitial" class="vote-button">Never Show Again</button>
+    </div>
+  </div>
+
+<!-- Mobile-specific popup -->
+<div id="mobile-popup" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: white; padding: 20px; border-radius: 10px; box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.3); z-index: 10000;">
+    <p>Sorry, the site is not yet optimized for mobile phones. Working on it, though!</p>
+    <button id="close-mobile-popup" style="margin-top: 10px; background-color: #000; color: #fff; padding: 10px 20px; border-radius: 5px; border: none; cursor: pointer;">Visit Anyway</button>
+</div>
 
     <!-- JS -->
     <script src="script.js"></script>
