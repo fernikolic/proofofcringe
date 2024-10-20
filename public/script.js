@@ -22,7 +22,8 @@ async function fetchData() {
     console.log('Data received from server:', jsonData); // Logging
 
     if (jsonData.values) {
-      data = jsonData.values.map(row => ({
+      data = jsonData.values.map((row, index) => ({
+        rowIndex: index, // Track the row index
         headline: row[0] || 'No headline',
         screenshot: row[1] || '',
         description: row[2] || 'No description available.',
@@ -65,8 +66,6 @@ function displayContent() {
   const description = document.getElementById('description');
   const dateElement = document.getElementById('date');
   const outletElement = document.getElementById('outlet');
-  const upvotesCount = document.getElementById('upvotes-count');
-  const downvotesCount = document.getElementById('downvotes-count');
 
   screenshot.classList.remove('show');
   description.classList.remove('show');
@@ -81,9 +80,6 @@ function displayContent() {
     dateElement.textContent = `Date: ${item.date}`;
     outletElement.innerHTML = `Outlet: ${item.outlet} <a href="${item.url}" target="_blank"><i class="fas fa-external-link-alt"></i></a>`;
 
-    upvotesCount.textContent = item.upvotes;
-    downvotesCount.textContent = item.downvotes;
-
     screenshot.classList.add('show');
     description.classList.add('show');
     dateElement.classList.add('show');
@@ -96,12 +92,20 @@ function displayContent() {
 function handleVote(type) {
   if (currentItemIndex === null) return;
 
+  const currentItem = data[currentItemIndex];
+
+  // Ensure valid upvote and downvote numbers
+  if (!currentItem.upvotes) currentItem.upvotes = 0;
+  if (!currentItem.downvotes) currentItem.downvotes = 0;
+
   // Update the votes
   if (type === 'upvote') {
-    data[currentItemIndex].upvotes += 1;
+    currentItem.upvotes += 1;
   } else if (type === 'downvote') {
-    data[currentItemIndex].downvotes += 1;
+    currentItem.downvotes += 1;
   }
+
+  console.log(`Updated votes: Upvotes - ${currentItem.upvotes}, Downvotes - ${currentItem.downvotes}`);
 
   clickCount++; // Increment the click counter
   console.log(`Click count: ${clickCount}`);
@@ -120,7 +124,7 @@ function handleVote(type) {
   }
 
   // Save the updated votes to Firebase Realtime Database
-  saveVotes(currentItemIndex, data[currentItemIndex].upvotes, data[currentItemIndex].downvotes);
+  saveVotes(currentItem.rowIndex, currentItem.upvotes, currentItem.downvotes);
 }
 
 // Show the interstitial
@@ -178,8 +182,8 @@ async function saveVotes(row, upvotes, downvotes) {
   try {
     const voteRef = firebase.database().ref('votes/' + row); // Reference to specific vote row
     await voteRef.set({
-      upvotes: upvotes,
-      downvotes: downvotes
+      upvotes: upvotes || 0, // Ensure valid number
+      downvotes: downvotes || 0
     });
     console.log('Vote saved successfully!', { row, upvotes, downvotes });
   } catch (error) {
