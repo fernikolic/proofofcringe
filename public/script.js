@@ -31,10 +31,11 @@ async function fetchData() {
         outlet: row[4] || 'No date available', // New Date column
         date: row[5] || 'No outlet available', // New Outlet column
         upvotes: parseInt(row[6] || '0', 10),  // Upvotes column
-        downvotes: parseInt(row[7] || '0', 10) // Downvotes column
+        downvotes: parseInt(row[7] || '0', 10), // Downvotes column
+        slug: row[6] || 'no-slug' // Use slug from Column G, or provide a fallback
       }));
 
-      console.log('Processed data:', data);
+      console.log('Processed data with slugs:', data);
     } else {
       console.error('No data found in the response.');
       data = [];
@@ -61,6 +62,10 @@ function displayContent() {
   currentItemIndex = getRandomIndex();
   const item = data[currentItemIndex];
   console.log('Item to display:', item);
+
+  // Update the URL with the slug
+  const newUrl = `${window.location.origin}/${item.slug}`;
+  history.pushState({}, '', newUrl); // This changes the URL without reloading the page
 
   const screenshot = document.getElementById('screenshot');
   const description = document.getElementById('description');
