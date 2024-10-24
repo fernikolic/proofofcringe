@@ -233,3 +233,20 @@ body {
   #mobile-popup button:hover {
     background-color: #333;
   }
+
+  video, img {
+    border-radius: 10px; /* Slightly rounded edges */
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Add subtle shadow for a sleeker look */
+  }
+
+  .unmute-notice {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    padding: 5px 10px;
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
+    border-radius: 5px;
+    font-size: 12px;
+    cursor: pointer;
+  }

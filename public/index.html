@@ -94,8 +94,8 @@
     </div>
 
     <!-- Main Content -->
-    <div class="container">
-        <img id="screenshot" src="" alt="Screenshot will appear here">
+    <div id="media-container" class="container">
+        <!-- Media content (either image or video) will be dynamically inserted here -->
     </div>
 
     <!-- Description Section -->
@@ -117,19 +117,7 @@
         <p>Sign up for exclusive insights into Bitcoin media trends!</p>
 
         <!-- Email Signup Form -->
-        <div style="height: 100vh">
-          <script src="https://cdn.jsdelivr.net/ghost/signup-form@~0.2/umd/signup-form.min.js" 
-                  data-background-color="#08090c" 
-                  data-text-color="#FFFFFF" 
-                  data-button-color="#000000" 
-                  data-button-text-color="#FFFFFF" 
-                  data-title="Bitcoin Perception" 
-                  data-description="Unlock Insights Into Bitcoin Media Trends &amp; Bias 📈" 
-                  data-icon="https://bitcoinperception.com/content/images/size/w192h192/size/w256h256/2024/09/New-Perception-Logo--gradient-blue--2.png" 
-                  data-site="https://bitcoinperception.com/" 
-                  data-locale="en" async>
-          </script>
-        </div>
+        <div style="min-height: 58px; max-width: 440px;width: 100%;position: absolute; left: 50%; top:50%; transform: translate(-50%, -50%);"><script src="https://cdn.jsdelivr.net/ghost/signup-form@~0.2/umd/signup-form.min.js" data-button-color="#000000" data-button-text-color="#FFFFFF" data-site="https://bitcoinperception.com/" data-locale="en" async></script></div>
 
         <button id="close-interstitial" class="vote-button">Continue Voting</button>
       </div>

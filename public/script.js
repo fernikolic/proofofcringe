@@ -25,7 +25,8 @@ async function fetchData() {
       data = jsonData.values.map((row, index) => ({
         rowIndex: index, // Track the row index
         headline: row[0] || 'No headline',
-        screenshot: row[1] || '',
+        mediaUrl: row[1] || '',
+        mediaType: row[1] && row[1].endsWith('.mp4') ? 'video' : 'image', // Determine media type based on file extension
         description: row[2] || 'No description available.',
         url: row[3] || '#',
         outlet: row[4] || 'No date available', // New Date column
@@ -62,30 +63,75 @@ function displayContent() {
   const item = data[currentItemIndex];
   console.log('Item to display:', item);
 
-  const screenshot = document.getElementById('screenshot');
+  const mediaContainer = document.getElementById('media-container');
   const description = document.getElementById('description');
   const dateElement = document.getElementById('date');
   const outletElement = document.getElementById('outlet');
 
-  if (!screenshot || !description || !dateElement || !outletElement) {
+  if (!mediaContainer || !description || !dateElement || !outletElement) {
     console.error('One or more elements are missing in the DOM');
     return;
   }
 
-  screenshot.classList.remove('show');
-  description.classList.remove('show');
-  dateElement.classList.remove('show');
-  outletElement.classList.remove('show');
+  // Clear previous content
+  mediaContainer.innerHTML = ''; 
 
   setTimeout(() => {
-    screenshot.src = item.screenshot;
-    screenshot.alt = item.headline;
+    // Check the media type and render either a video or image
+    if (item.mediaType === 'video') {
+      // Create and append a video element
+      const videoElement = document.createElement('video');
+      videoElement.src = item.mediaUrl;
+      videoElement.autoplay = true;
+      videoElement.loop = true;
+      videoElement.muted = true; // Muted to ensure autoplay works
+      videoElement.playsInline = true; // For autoplay on mobile
+      videoElement.width = 600; // Set desired width
+      videoElement.style.borderRadius = '10px'; // Apply rounded edges
+      videoElement.style.objectFit = 'cover'; // Ensure the video covers the container
+      mediaContainer.appendChild(videoElement);
+
+      // Create and append the unmute notice
+      const unmuteNotice = document.createElement('div');
+      unmuteNotice.innerText = 'Click to unmute the video';
+      unmuteNotice.style.position = 'absolute';
+      unmuteNotice.style.top = '10px';
+      unmuteNotice.style.left = '10px';
+      unmuteNotice.style.padding = '5px 10px';
+      unmuteNotice.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';
+      unmuteNotice.style.color = 'white';
+      unmuteNotice.style.borderRadius = '5px';
+      unmuteNotice.style.fontSize = '12px';
+      unmuteNotice.style.cursor = 'pointer';
+      mediaContainer.appendChild(unmuteNotice);
+
+      // Remove the notice once the user interacts with the video
+      videoElement.addEventListener('play', () => {
+        unmuteNotice.remove();
+      });
+
+      // Allow users to click on the video to unmute and play
+      videoElement.addEventListener('click', () => {
+        if (videoElement.muted) {
+          videoElement.muted = false; // Unmute the video
+          videoElement.play(); // Ensure the video plays
+        }
+      });
+    } else {
+      // Create and append an image element (default)
+      const imgElement = document.createElement('img');
+      imgElement.src = item.mediaUrl;
+      imgElement.alt = item.headline;
+      imgElement.width = 600; // Set desired width
+      imgElement.style.borderRadius = '10px'; // Apply rounded edges
+      mediaContainer.appendChild(imgElement);
+    }
 
     description.innerHTML = `<strong>Cringe-worthy quote:</strong> ${item.description}`;
     dateElement.textContent = `Date: ${item.date}`;
     outletElement.innerHTML = `Outlet: ${item.outlet} <a href="${item.url}" target="_blank"><i class="fas fa-external-link-alt"></i></a>`;
 
-    screenshot.classList.add('show');
+    mediaContainer.classList.add('show');
     description.classList.add('show');
     dateElement.classList.add('show');
     outletElement.classList.add('show');
@@ -182,15 +228,27 @@ document.addEventListener("DOMContentLoaded", async () => {
 });
 
 async function saveVotes(row, upvotes, downvotes) {
-  console.log('Saving votes to Firebase:', { row, upvotes, downvotes });
+  console.log('Sending votes to backend:', { row, upvotes, downvotes });
 
   try {
-    const voteRef = firebase.database().ref('votes/' + row); // Reference to specific vote row
-    await voteRef.set({
-      upvotes: upvotes || 0, // Ensure valid number
-      downvotes: downvotes || 0
+    const response = await fetch('/api/save-vote', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        row: row,
+        upvotes: upvotes,
+        downvotes: downvotes,
+      }),
     });
-    console.log('Vote saved successfully!', { row, upvotes, downvotes });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+
+    const result = await response.json();
+    console.log('Vote saved successfully on the backend!', result);
   } catch (error) {
     console.error('Error saving votes:', error);
   }
