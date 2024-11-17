@@ -37,6 +37,8 @@ export default function TakeDetails() {
         title={`${take.headline} - Proof of Cringe`}
         description={take.description}
         image={take.media}
+        headline={take.headline}
+        outlet={take.outlet}
         type="article"
       />
       <div className="max-w-4xl mx-auto">

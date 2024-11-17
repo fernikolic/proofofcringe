@@ -28,7 +28,6 @@ export function useTakes() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Fetch sheet data
         const response = await fetch(SHEETS_API_URL);
         if (!response.ok) throw new Error('Failed to fetch data');
         const data = await response.json();
@@ -38,7 +37,6 @@ export function useTakes() {
           setTakes(parsedTakes);
         }
 
-        // Listen to votes in Firebase
         const votesRef = ref(db, 'votes');
         onValue(votesRef, (snapshot) => {
           const votes = snapshot.val() || {};

@@ -11,7 +11,7 @@ export default function Home() {
     <div className="space-y-8">
       <SEO />
       <p className="text-lg md:text-xl font-medium max-w-2xl mx-auto text-center bg-gradient-to-r from-orange-500/80 via-yellow-500/80 to-orange-500/80 text-transparent bg-clip-text animate-float">
-        Explore and rank the worst Bitcoin takes from mainstream media
+        Explore and rank the worst Bitcoin takes
       </p>
 
       {loading ? (
