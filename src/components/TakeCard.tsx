@@ -34,11 +34,11 @@ const VOTE_MESSAGES = {
     "Peak FUD achieved! 📉"
   ],
   down: [
-    "Based! This one aged like milk! 🥛",
+    "Based? Really? This one aged like milk! 🥛",
     "Absolutely rekt! 💥",
     "Another one for the meme collection! 🎯",
     "Satoshi is laughing somewhere! 😂",
-    "This take didn't survive the timeline! ⏰"
+    "Based? Really? This take didn't survive the timeline! ⏰"
   ]
 };
 
@@ -189,7 +189,7 @@ export default function TakeCard({ take, onVote, showShareButton = false }: Take
         >
           <ThumbsDown className="w-5 h-5 mr-2 animate-bounce" />
           <span className="hidden sm:inline">Maximum </span>
-          <span>Cringe</span>
+          <span> Cringe</span>
         </Button>
         <Button
           variant="default"
@@ -203,7 +203,7 @@ export default function TakeCard({ take, onVote, showShareButton = false }: Take
         >
           <ThumbsUp className="w-5 h-5 mr-2 animate-bounce" />
           <span className="hidden sm:inline">Actually </span>
-          <span>Based</span>
+          <span> Based</span>
         </Button>
       </CardFooter>
     </Card>

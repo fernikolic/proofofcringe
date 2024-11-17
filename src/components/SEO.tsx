@@ -21,7 +21,7 @@ export default function SEO({
   outlet
 }: SEOProps) {
   const siteName = 'Proof of Cringe';
-  const twitterHandle = '@bitcoinperc';
+  const twitterHandle = '@bitcoinperception';
 
   // Optimize title for social sharing
   const socialTitle = headline 
