@@ -1,13 +1,17 @@
 import React, { useState } from 'react';
-import { Send, Eye, AlertCircle } from 'lucide-react';
+import { Send, Eye, Loader } from 'lucide-react';
 import TakeCard from '../components/TakeCard';
 import type { Take } from '../types';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { useToast } from '@/components/ui/use-toast';
 
+// Using the Apps Script URL that writes to the specific "Inbound" sheet
+const SHEET_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwwtRJahrxeCKST1UvJApQsrU64O7YldyF2Y90farN6fGNOPzOUwHbhzJ4fnmvjOR2Juw/exec';
+
 export default function Submit() {
   const { toast } = useToast();
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
     headline: '',
     media: '',
@@ -19,34 +23,54 @@ export default function Submit() {
   });
   const [showPreview, setShowPreview] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsSubmitting(true);
 
-    // Format email body
-    const emailBody = `
-New Bitcoin Take Submission:
+    try {
+      const formDataWithTimestamp = {
+        ...formData,
+        timestamp: new Date().toISOString()
+      };
 
-Headline: ${formData.headline}
-Media URL: ${formData.media}
-Description: ${formData.description}
-Source URL: ${formData.url}
-Outlet: ${formData.outlet}
-Date: ${formData.date}
-Category: ${formData.category}
-    `.trim();
+      const response = await fetch(SHEET_SCRIPT_URL, {
+        method: 'POST',
+        mode: 'no-cors', // Required for Google Apps Script
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formDataWithTimestamp)
+      });
 
-    // Create mailto link
-    const mailtoLink = `mailto:fernikolic@gmail.com?subject=${encodeURIComponent('New Proof of Cringe Submission')}&body=${encodeURIComponent(emailBody)}`;
+      // Since no-cors doesn't give us response status, we assume success
+      toast({
+        title: "Success!",
+        description: "Your submission has been received. It will be reviewed and added to the site soon.",
+        duration: 5000,
+      });
 
-    // Open email client
-    window.location.href = mailtoLink;
+      // Reset form
+      setFormData({
+        headline: '',
+        media: '',
+        description: '',
+        url: '',
+        outlet: '',
+        date: '',
+        category: 'Price Prediction'
+      });
+      setShowPreview(false);
 
-    // Show success toast
-    toast({
-      title: "Email client opened!",
-      description: "Please send the email to submit your take.",
-      duration: 5000,
-    });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to submit. Please try again later.",
+        duration: 5000,
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const previewTake: Take = {
@@ -189,9 +213,13 @@ Category: ${formData.category}
               {showPreview ? 'Hide Preview' : 'Show Preview'}
             </Button>
 
-            <Button type="submit">
-              <Send className="h-5 w-5 mr-2" />
-              Submit Take
+            <Button type="submit" disabled={isSubmitting}>
+              {isSubmitting ? (
+                <Loader className="h-5 w-5 mr-2 animate-spin" />
+              ) : (
+                <Send className="h-5 w-5 mr-2" />
+              )}
+              {isSubmitting ? 'Submitting...' : 'Submit Take'}
             </Button>
           </div>
         </form>
