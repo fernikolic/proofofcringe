@@ -5,12 +5,13 @@ import { Button } from './ui/button';
 import { Card, CardHeader, CardContent, CardFooter } from './ui/card';
 import { cn } from '@/lib/utils';
 import { useToast } from './ui/use-toast';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import type { Take } from '../types';
 
 interface TakeCardProps {
   take: Take;
   onVote?: (newVotes: number) => void;
+  showShareButton?: boolean;
 }
 
 const XIcon = () => (
@@ -53,10 +54,11 @@ const getMediaUrl = (url: string) => {
   return url;
 };
 
-export default function TakeCard({ take, onVote }: TakeCardProps) {
+export default function TakeCard({ take, onVote, showShareButton = false }: TakeCardProps) {
   const { toast } = useToast();
   const [votes, setVotes] = useState(take.votes || 0);
   const [isHovered, setIsHovered] = useState(false);
+  const location = useLocation();
 
   const getRandomMessage = (type: 'up' | 'down') => {
     const messages = VOTE_MESSAGES[type];
@@ -77,12 +79,13 @@ export default function TakeCard({ take, onVote }: TakeCardProps) {
 
   const handleShare = () => {
     const text = `Check out this terrible Bitcoin take from ${take.outlet}:\n\n"${take.headline}"\n\n`;
-    const url = `${window.location.origin}/${take.slug}`;
+    const url = `${window.location.origin}/${take.id}`;
     window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`, '_blank');
   };
 
   const mediaUrl = getMediaUrl(take.media || '');
   const isVideo = mediaUrl.toLowerCase().endsWith('.mp4');
+  const isDetailPage = location.pathname === `/${take.id}`;
 
   return (
     <Card 
@@ -95,24 +98,34 @@ export default function TakeCard({ take, onVote }: TakeCardProps) {
     >
       <CardHeader className="relative p-4 sm:p-6">
         <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4">
-          <Link 
-            to={`/${take.slug}`}
-            className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground hover:text-orange-500 transition-colors"
-          >
-            <span>{format(new Date(take.date), 'MMM d, yyyy')}</span>
-            <span className="hidden sm:inline">•</span>
-            <span>{take.outlet}</span>
-          </Link>
-          <div className="flex items-center gap-2">
-            <Button 
-              variant="outline"
-              size="sm"
-              onClick={handleShare}
-              className="group hover:bg-[#1DA1F2]/10 hover:text-[#1DA1F2] hover:border-[#1DA1F2]/50 transition-all duration-300"
+          {!isDetailPage ? (
+            <Link 
+              to={`/${take.id}`}
+              className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground hover:text-orange-500 transition-colors"
             >
-              <XIcon />
-              <span className="ml-2 hidden sm:inline">Share</span>
-            </Button>
+              <span>{format(new Date(take.date), 'MMM d, yyyy')}</span>
+              <span className="hidden sm:inline">•</span>
+              <span>{take.outlet}</span>
+            </Link>
+          ) : (
+            <div className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
+              <span>{format(new Date(take.date), 'MMM d, yyyy')}</span>
+              <span className="hidden sm:inline">•</span>
+              <span>{take.outlet}</span>
+            </div>
+          )}
+          <div className="flex items-center gap-2">
+            {(showShareButton || !isDetailPage) && (
+              <Button 
+                variant="outline"
+                size="sm"
+                onClick={handleShare}
+                className="group hover:bg-[#1DA1F2]/10 hover:text-[#1DA1F2] hover:border-[#1DA1F2]/50 transition-all duration-300"
+              >
+                <XIcon />
+                <span className="ml-2 hidden sm:inline">Share</span>
+              </Button>
+            )}
             <Button 
               variant="ghost" 
               size="icon" 

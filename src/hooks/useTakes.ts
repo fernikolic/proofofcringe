@@ -7,14 +7,13 @@ const SHEETS_API_URL = 'https://sheets.googleapis.com/v4/spreadsheets/1L_8B_G50Y
 
 function parseSheetData(rows: string[][]): Take[] {
   return rows.map((row, index) => ({
-    id: `sheet-${index}`,
+    id: `${index + 1}`,
     headline: row[0] || '',
     media: row[1] || '',
     description: row[2] || '',
     url: row[3] || '',
     outlet: row[4] || '',
     date: row[5] || new Date().toISOString().split('T')[0],
-    slug: row[6] || '',
     votes: 0,
     bitcoinPrice: 0,
     category: 'Uncategorized'
@@ -81,13 +80,11 @@ export function useTakeOfTheDay() {
   const { takes, loading, error, updateVotes } = useTakes();
   const [takeOfDay, setTakeOfDay] = useState<Take | null>(null);
 
-  // Function to get a random take
   const getRandomTake = (currentTakeId?: string) => {
     if (takes.length === 0) return null;
     
     let availableTakes = takes;
     if (currentTakeId) {
-      // Exclude the current take when selecting a new one
       availableTakes = takes.filter(t => t.id !== currentTakeId);
     }
     
@@ -95,17 +92,14 @@ export function useTakeOfTheDay() {
     return availableTakes[randomIndex];
   };
 
-  // Set initial take
   useEffect(() => {
     if (takes.length > 0 && !takeOfDay) {
       setTakeOfDay(getRandomTake());
     }
   }, [takes]);
 
-  // Wrapper for updateVotes that also loads a new take
   const handleVoteAndNewTake = async (takeId: string, newVotes: number) => {
     await updateVotes(takeId, newVotes);
-    // Load a new random take after voting
     setTakeOfDay(getRandomTake(takeId));
   };
 

@@ -11,7 +11,7 @@ export default function TakeDetails() {
   
   if (loading) {
     return (
-      <div className="flex justify-center items-center py-12">
+      <div className="flex justify-center items-center min-h-[50vh]">
         <Loader className="h-8 w-8 text-orange-500 animate-spin" />
       </div>
     );
@@ -25,24 +25,27 @@ export default function TakeDetails() {
     );
   }
 
-  const take = takes.find(t => t.slug === slug);
+  const take = takes.find(t => t.id === slug);
 
   if (!take) {
     return <Navigate to="/" replace />;
   }
 
   return (
-    <div className="max-w-4xl mx-auto">
+    <div className="container mx-auto px-4 py-6 sm:py-8">
       <SEO
         title={`${take.headline} - Proof of Cringe`}
         description={take.description}
         image={take.media}
         type="article"
       />
-      <TakeCard 
-        take={take}
-        onVote={(newVotes) => updateVotes(take.id, newVotes)}
-      />
+      <div className="max-w-4xl mx-auto">
+        <TakeCard 
+          take={take}
+          onVote={(newVotes) => updateVotes(take.id, newVotes)}
+          showShareButton
+        />
+      </div>
     </div>
   );
 }
