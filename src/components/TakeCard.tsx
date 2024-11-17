@@ -93,14 +93,14 @@ export default function TakeCard({ take, onVote }: TakeCardProps) {
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      <CardHeader className="relative">
-        <div className="flex justify-between items-start">
+      <CardHeader className="relative p-4 sm:p-6">
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4">
           <Link 
             to={`/${take.slug}`}
-            className="flex items-center space-x-2 text-sm text-muted-foreground hover:text-orange-500 transition-colors"
+            className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground hover:text-orange-500 transition-colors"
           >
             <span>{format(new Date(take.date), 'MMM d, yyyy')}</span>
-            <span>•</span>
+            <span className="hidden sm:inline">•</span>
             <span>{take.outlet}</span>
           </Link>
           <div className="flex items-center gap-2">
@@ -111,7 +111,7 @@ export default function TakeCard({ take, onVote }: TakeCardProps) {
               className="group hover:bg-[#1DA1F2]/10 hover:text-[#1DA1F2] hover:border-[#1DA1F2]/50 transition-all duration-300"
             >
               <XIcon />
-              <span className="ml-2">Share</span>
+              <span className="ml-2 hidden sm:inline">Share</span>
             </Button>
             <Button 
               variant="ghost" 
@@ -132,7 +132,7 @@ export default function TakeCard({ take, onVote }: TakeCardProps) {
         </div>
       </CardHeader>
 
-      <CardContent className="space-y-4">
+      <CardContent className="space-y-4 p-4 sm:p-6">
         {mediaUrl && (
           <div className="relative rounded-lg overflow-hidden bg-gray-900 aspect-video group transition-all duration-300 hover:shadow-lg hover:shadow-orange-500/20">
             {isVideo ? (
@@ -157,41 +157,39 @@ export default function TakeCard({ take, onVote }: TakeCardProps) {
         )}
 
         <div className="space-y-4">
-          <div className="bg-gray-900/50 rounded-xl p-6 border border-orange-500/10 hover:border-orange-500/20 transition-all duration-300">
-            <p className="text-lg italic">{take.description}</p>
+          <div className="bg-gray-900/50 rounded-xl p-4 sm:p-6 border border-orange-500/10 hover:border-orange-500/20 transition-all duration-300">
+            <p className="text-base sm:text-lg italic">{take.description}</p>
           </div>
         </div>
       </CardContent>
 
-      <CardFooter className="flex justify-between items-center pt-6">
-        <div className="flex gap-4 w-full">
-          <Button
-            variant="default"
-            size="lg"
-            onClick={() => handleVote(1)}
-            className={cn(
-              "flex-1 bg-red-500 hover:bg-red-600 text-white font-semibold transition-all duration-300",
-              "hover:scale-105 hover:shadow-lg hover:shadow-red-500/20",
-              "active:scale-95"
-            )}
-          >
-            <ThumbsDown className="w-5 h-5 mr-2 animate-bounce" />
-            Maximum Cringe
-          </Button>
-          <Button
-            variant="default"
-            size="lg"
-            onClick={() => handleVote(-1)}
-            className={cn(
-              "flex-1 bg-green-500 hover:bg-green-600 text-white font-semibold transition-all duration-300",
-              "hover:scale-105 hover:shadow-lg hover:shadow-green-500/20",
-              "active:scale-95"
-            )}
-          >
-            <ThumbsUp className="w-5 h-5 mr-2 animate-bounce" />
-            Actually Based
-          </Button>
-        </div>
+      <CardFooter className="flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-4 p-4 sm:p-6 pt-4">
+        <Button
+          variant="default"
+          size="lg"
+          onClick={() => handleVote(1)}
+          className={cn(
+            "flex-1 bg-red-500 hover:bg-red-600 text-white font-semibold transition-all duration-300",
+            "hover:scale-105 hover:shadow-lg hover:shadow-red-500/20",
+            "active:scale-95"
+          )}
+        >
+          <ThumbsDown className="w-5 h-5 mr-2 animate-bounce" />
+          <span className="hidden sm:inline">Maximum</span> Cringe
+        </Button>
+        <Button
+          variant="default"
+          size="lg"
+          onClick={() => handleVote(-1)}
+          className={cn(
+            "flex-1 bg-green-500 hover:bg-green-600 text-white font-semibold transition-all duration-300",
+            "hover:scale-105 hover:shadow-lg hover:shadow-green-500/20",
+            "active:scale-95"
+          )}
+        >
+          <ThumbsUp className="w-5 h-5 mr-2 animate-bounce" />
+          <span className="hidden sm:inline">Actually</span> Based
+        </Button>
       </CardFooter>
     </Card>
   );
