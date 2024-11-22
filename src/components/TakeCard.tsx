@@ -226,8 +226,10 @@ export default function TakeCard({ take, onVote, showShareButton = false }: Take
           )}
         >
           <ThumbsDown className="w-5 h-5 mr-2 animate-bounce" />
-          <span>Maximum </span>
-          <span>Cringe</span>
+          <div className="flex gap-1">
+            <span>Maximum</span>
+            <span>Cringe</span>
+          </div>
         </Button>
         <Button
           variant="default"
@@ -240,8 +242,10 @@ export default function TakeCard({ take, onVote, showShareButton = false }: Take
           )}
         >
           <ThumbsUp className="w-5 h-5 mr-2 animate-bounce" />
-          <span>Actually </span>
-          <span>Based</span>
+          <div className="flex gap-1">
+            <span>Actually</span>
+            <span>Based</span>
+          </div>
         </Button>
       </CardFooter>
     </Card>

@@ -25,7 +25,7 @@ export default function TakeDetails() {
     );
   }
 
-  const take = takes.find(t => t.id === slug);
+  const take = takes.find(t => t.slug === slug);
 
   if (!take) {
     return <Navigate to="/" replace />;
