@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { NavLink, Link } from 'react-router-dom';
 import { Bitcoin, Trophy, Send, ExternalLink, Menu, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { ThemeToggle } from './ThemeToggle';
 
 export default function Navigation() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -15,26 +16,34 @@ export default function Navigation() {
   return (
     <nav className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-14 max-w-screen-2xl items-center justify-between px-4">
-        <Link 
-          to="/" 
-          className="flex items-center space-x-2 transition-all duration-300 hover:opacity-80"
-        >
-          <span className="font-bold text-lg bg-gradient-to-r from-orange-500 to-yellow-500 text-transparent bg-clip-text">
-            Proof Of Cringe
+        <div className="flex items-center gap-4">
+          <Link 
+            to="/" 
+            className="flex items-center space-x-2 transition-all duration-300 hover:opacity-80"
+          >
+            <span className="font-bold text-lg bg-gradient-to-r from-orange-500 to-yellow-500 text-transparent bg-clip-text">
+              Proof Of Cringe
+            </span>
+          </Link>
+          <span className="hidden sm:block text-sm text-muted-foreground">
+            Explore and rank the worst Bitcoin takes
           </span>
-        </Link>
+        </div>
 
         {/* Mobile Menu Button */}
-        <button
-          onClick={() => setIsMenuOpen(!isMenuOpen)}
-          className="md:hidden p-2 hover:bg-gray-800 rounded-md"
-        >
-          {isMenuOpen ? (
-            <X className="h-6 w-6" />
-          ) : (
-            <Menu className="h-6 w-6" />
-          )}
-        </button>
+        <div className="flex items-center gap-2 md:hidden">
+          <ThemeToggle />
+          <button
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+            className="p-2 hover:bg-accent rounded-md"
+          >
+            {isMenuOpen ? (
+              <X className="h-6 w-6" />
+            ) : (
+              <Menu className="h-6 w-6" />
+            )}
+          </button>
+        </div>
 
         {/* Desktop Navigation */}
         <div className="hidden md:flex items-center space-x-2">
@@ -63,6 +72,7 @@ export default function Navigation() {
             <span>By Bitcoin Perception</span>
             <ExternalLink className="h-3 w-3 ml-1.5 opacity-70" />
           </a>
+          <ThemeToggle />
         </div>
 
         {/* Mobile Navigation */}
