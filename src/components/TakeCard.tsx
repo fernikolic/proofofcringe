@@ -1,12 +1,18 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { format } from 'date-fns';
-import { Share2, ThumbsUp, ThumbsDown, ExternalLink } from 'lucide-react';
+import { Share2, ThumbsUp, ThumbsDown, ExternalLink, Volume2, VolumeX } from 'lucide-react';
 import { Button } from './ui/button';
 import { Card, CardHeader, CardContent, CardFooter } from './ui/card';
 import { cn } from '@/lib/utils';
 import { useToast } from './ui/use-toast';
 import { Link, useLocation } from 'react-router-dom';
 import type { Take } from '../types';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 interface TakeCardProps {
   take: Take;
@@ -34,11 +40,11 @@ const VOTE_MESSAGES = {
     "Peak FUD achieved! 📉"
   ],
   down: [
-    "Based? Really? This one aged like milk! 🥛",
+    "Based! This one aged like milk! 🥛",
     "Absolutely rekt! 💥",
     "Another one for the meme collection! 🎯",
     "Satoshi is laughing somewhere! 😂",
-    "Based? Really? This take didn't survive the timeline! ⏰"
+    "This take didn't survive the timeline! ⏰"
   ]
 };
 
@@ -58,6 +64,8 @@ export default function TakeCard({ take, onVote, showShareButton = false }: Take
   const { toast } = useToast();
   const [votes, setVotes] = useState(take.votes || 0);
   const [isHovered, setIsHovered] = useState(false);
+  const [isMuted, setIsMuted] = useState(true);
+  const videoRef = useRef<HTMLVideoElement>(null);
   const location = useLocation();
 
   const getRandomMessage = (type: 'up' | 'down') => {
@@ -79,13 +87,20 @@ export default function TakeCard({ take, onVote, showShareButton = false }: Take
 
   const handleShare = () => {
     const text = `Check out this terrible Bitcoin take from ${take.outlet}:\n\n"${take.headline}"\n\n`;
-    const url = `${window.location.origin}/${take.id}`;
+    const url = `${window.location.origin}/${take.slug}`;
     window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`, '_blank');
+  };
+
+  const toggleMute = () => {
+    if (videoRef.current) {
+      videoRef.current.muted = !videoRef.current.muted;
+      setIsMuted(videoRef.current.muted);
+    }
   };
 
   const mediaUrl = getMediaUrl(take.media || '');
   const isVideo = mediaUrl.toLowerCase().endsWith('.mp4');
-  const isDetailPage = location.pathname === `/${take.id}`;
+  const isDetailPage = location.pathname === `/${take.slug}`;
 
   return (
     <Card 
@@ -100,7 +115,7 @@ export default function TakeCard({ take, onVote, showShareButton = false }: Take
         <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4">
           {!isDetailPage ? (
             <Link 
-              to={`/${take.id}`}
+              to={`/${take.slug}`}
               className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground hover:text-orange-500 transition-colors"
             >
               <span>{format(new Date(take.date), 'MMM d, yyyy')}</span>
@@ -149,16 +164,39 @@ export default function TakeCard({ take, onVote, showShareButton = false }: Take
         {mediaUrl && (
           <div className="relative rounded-lg overflow-hidden bg-gray-900 aspect-video group transition-all duration-300 hover:shadow-lg hover:shadow-orange-500/20">
             {isVideo ? (
-              <video
-                key={mediaUrl}
-                src={mediaUrl}
-                className="w-full h-full object-contain"
-                controls
-                autoPlay
-                muted
-                loop
-                playsInline
-              />
+              <>
+                <video
+                  ref={videoRef}
+                  key={mediaUrl}
+                  src={mediaUrl}
+                  className="w-full h-full object-contain"
+                  autoPlay
+                  loop
+                  playsInline
+                  muted={isMuted}
+                />
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button
+                        variant="secondary"
+                        size="icon"
+                        className="absolute bottom-4 right-4 bg-black/50 hover:bg-black/70 backdrop-blur-sm"
+                        onClick={toggleMute}
+                      >
+                        {isMuted ? (
+                          <VolumeX className="h-4 w-4" />
+                        ) : (
+                          <Volume2 className="h-4 w-4" />
+                        )}
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>{isMuted ? 'Unmute video' : 'Mute video'}</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              </>
             ) : (
               <img
                 src={mediaUrl}
@@ -188,8 +226,8 @@ export default function TakeCard({ take, onVote, showShareButton = false }: Take
           )}
         >
           <ThumbsDown className="w-5 h-5 mr-2 animate-bounce" />
-          <span className="hidden sm:inline">Maximum </span>
-          <span> Cringe</span>
+          <span>Maximum </span>
+          <span>Cringe</span>
         </Button>
         <Button
           variant="default"
@@ -202,8 +240,8 @@ export default function TakeCard({ take, onVote, showShareButton = false }: Take
           )}
         >
           <ThumbsUp className="w-5 h-5 mr-2 animate-bounce" />
-          <span className="hidden sm:inline">Actually </span>
-          <span> Based</span>
+          <span>Actually </span>
+          <span>Based</span>
         </Button>
       </CardFooter>
     </Card>

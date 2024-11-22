@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { ref, onValue, off, set } from 'firebase/database';
 import { db } from '../lib/firebase';
 import type { Take } from '../types';
+import { slugify } from '@/lib/utils';
 
 const SHEETS_API_URL = 'https://sheets.googleapis.com/v4/spreadsheets/1L_8B_G50Y0oHJ46IWmspRYS5l_VcWr_MU5qR9lBcMQs/values/Sheet1!A2:H?key=AIzaSyC3oGB9sdUrokD-OrMdx0ol0TBdhf2gudQ';
 
@@ -16,7 +17,8 @@ function parseSheetData(rows: string[][]): Take[] {
     date: row[5] || new Date().toISOString().split('T')[0],
     votes: 0,
     bitcoinPrice: 0,
-    category: 'Uncategorized'
+    category: row[6] || 'Uncategorized',
+    slug: slugify(`${row[0]}-${row[4]}-${row[5]}`) // Create slug from headline-outlet-date
   }));
 }
 
