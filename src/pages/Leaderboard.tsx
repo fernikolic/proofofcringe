@@ -1,13 +1,50 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Trophy, ArrowUp, Loader } from 'lucide-react';
 import TakeCard from '../components/TakeCard';
 import YearFilter from '../components/YearFilter';
 import { useTakes } from '../hooks/useTakes';
 import SEO from '../components/SEO';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 export default function Leaderboard() {
   const [selectedYear, setSelectedYear] = useState('All Time');
   const { takes, loading, error, updateVotes } = useTakes();
+  const location = useLocation();
+  const navigate = useNavigate();
+  const [showScrollTop, setShowScrollTop] = useState(false);
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  useEffect(() => {
+    const handleScroll = () => {
+      // Show button when user scrolls down 200px
+      setShowScrollTop(window.scrollY > 200);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  // Parse year from URL on mount
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const yearParam = params.get('year');
+    if (yearParam) {
+      setSelectedYear(yearParam);
+    }
+  }, [location]);
+
+  // Update URL when year changes
+  const handleYearChange = (year: string) => {
+    setSelectedYear(year);
+    const params = new URLSearchParams();
+    if (year !== 'All Time') {
+      params.set('year', year);
+    }
+    navigate({ search: params.toString() });
+  };
 
   const filteredTakes = takes
     .filter(take => {
@@ -37,10 +74,10 @@ export default function Leaderboard() {
       </header>
 
       <div className="max-w-4xl mx-auto">
-        <div className="sticky top-0 bg-gray-950/80 backdrop-blur-sm z-10 p-4 -mx-4">
+        <div className="sticky top-0 bg-background/80 backdrop-blur-sm z-10 p-4 -mx-4 border-b border-border/50">
           <YearFilter 
             selectedYear={selectedYear}
-            onYearChange={setSelectedYear}
+            onYearChange={handleYearChange}
           />
         </div>
 
@@ -54,13 +91,8 @@ export default function Leaderboard() {
           </div>
         ) : (
           <div className="space-y-6 mt-8">
-            {filteredTakes.map((take, index) => (
+            {filteredTakes.map((take) => (
               <div key={take.id} className="relative">
-                {index < 3 && (
-                  <div className="absolute -left-4 -top-4 bg-orange-500 text-white rounded-full w-8 h-8 flex items-center justify-center z-10">
-                    <ArrowUp className="h-5 w-5" />
-                  </div>
-                )}
                 <TakeCard 
                   take={take}
                   onVote={(newVotes) => updateVotes(take.id, newVotes)}
@@ -73,6 +105,15 @@ export default function Leaderboard() {
                 <p className="text-gray-400">No takes found for the selected year.</p>
               </div>
             )}
+          </div>
+        )}
+
+        {showScrollTop && (
+          <div 
+            onClick={scrollToTop}
+            className="fixed bottom-8 right-8 bg-orange-500 text-white rounded-full w-10 h-10 flex items-center justify-center cursor-pointer hover:bg-orange-600 transition-all duration-200 shadow-lg hover:scale-110 animate-fade-in"
+          >
+            <ArrowUp className="h-6 w-6" />
           </div>
         )}
       </div>

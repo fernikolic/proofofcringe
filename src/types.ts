@@ -1,15 +1,15 @@
 export interface Take {
   id: string;
-  headline: string;
-  media?: string;
-  description: string;
-  url: string;
   outlet: string;
+  description: string;
   date: string;
-  slug: string;
   votes: number;
-  bitcoinPrice: number;
-  category: string;
+  media?: string;
+  url: string;
+  slug: string;
+  headline?: string;
+  contentType: 'video' | 'image';
+  category?: string;
 }
 
 export interface TakeOfTheDay extends Take {

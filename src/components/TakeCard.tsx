@@ -86,8 +86,8 @@ export default function TakeCard({ take, onVote, showShareButton = false }: Take
   };
 
   const handleShare = () => {
-    const text = `Check out this terrible Bitcoin take from ${take.outlet}:\n\n"${take.headline}"\n\n`;
-    const url = `${window.location.origin}/${take.slug}`;
+    const text = `Check out this terrible Bitcoin take from ${take.outlet}:\n\n"${take.headline || take.description}"\n\n`;
+    const url = `${window.location.origin}/take/${take.slug}`;
     window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`, '_blank');
   };
 
@@ -115,7 +115,7 @@ export default function TakeCard({ take, onVote, showShareButton = false }: Take
         <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4">
           {!isDetailPage ? (
             <Link 
-              to={`/${take.slug}`}
+              to={`/take/${take.slug}`}
               className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground hover:text-orange-500 transition-colors"
             >
               <span>{format(new Date(take.date), 'MMM d, yyyy')}</span>
@@ -208,7 +208,7 @@ export default function TakeCard({ take, onVote, showShareButton = false }: Take
         )}
 
         <div className="space-y-4">
-          <div className="bg-gray-900/50 rounded-xl p-4 sm:p-6 border border-orange-500/10 hover:border-orange-500/20 transition-all duration-300">
+          <div className="border border-border/50 rounded-lg p-4 sm:p-6 hover:border-orange-500/20 transition-all duration-300">
             <p className="text-base sm:text-lg italic">{take.description}</p>
           </div>
         </div>

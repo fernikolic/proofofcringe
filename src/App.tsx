@@ -23,7 +23,7 @@ export default function App() {
                 <Route path="/" element={<Home />} />
                 <Route path="/leaderboard" element={<Leaderboard />} />
                 <Route path="/submit" element={<Submit />} />
-                <Route path="/:slug" element={<TakeDetails />} />
+                <Route path="/take/:slug" element={<TakeDetails />} />
               </Routes>
             </main>
             <Toaster />
