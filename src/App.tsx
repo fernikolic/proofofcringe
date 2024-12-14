@@ -1,4 +1,3 @@
-import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
 import { ThemeProvider } from './components/ThemeProvider';
@@ -9,6 +8,7 @@ import Submit from './pages/Submit';
 import TakeDetails from './pages/TakeDetails';
 import { Toaster } from './components/ui/toaster';
 import SEO from './components/SEO';
+import About from './pages/About';
 
 export default function App() {
   return (
@@ -24,6 +24,7 @@ export default function App() {
                 <Route path="/leaderboard" element={<Leaderboard />} />
                 <Route path="/submit" element={<Submit />} />
                 <Route path="/take/:slug" element={<TakeDetails />} />
+                <Route path="/about" element={<About />} />
               </Routes>
             </main>
             <Toaster />
